@@ -1,9 +1,9 @@
 package br.com.nobre.minibank_api.wallet.transaction.category.controller;
 
 import br.com.nobre.minibank_api.commons.dto.PageResponseDto;
+import br.com.nobre.minibank_api.commons.exception.NotFoundException;
 import br.com.nobre.minibank_api.wallet.transaction.category.dto.TransactionCategoryRequestDto;
 import br.com.nobre.minibank_api.wallet.transaction.category.dto.TransactionCategoryResponseDto;
-import br.com.nobre.minibank_api.wallet.transaction.category.model.TransactionCategory;
 import br.com.nobre.minibank_api.wallet.transaction.category.service.TransactionCategoryService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -23,8 +23,8 @@ public class TransactionCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponseDto<TransactionCategory>> getAllCategories(@PageableDefault(size = 100, page = 0) Pageable pageable) {
-        Page<TransactionCategory> page = categoryService.findAllCategories(pageable);
+    public ResponseEntity<PageResponseDto<TransactionCategoryResponseDto>> getAllCategories(@PageableDefault(size = 100, page = 0) Pageable pageable) {
+        Page<TransactionCategoryResponseDto> page = categoryService.findAllCategories(pageable);
         return ResponseEntity.ok(PageResponseDto.from(page));
     }
 
@@ -32,6 +32,18 @@ public class TransactionCategoryController {
     public ResponseEntity<TransactionCategoryResponseDto> createCategory(@RequestBody @Valid TransactionCategoryRequestDto categoryDto) {
         TransactionCategoryResponseDto responseDto = categoryService.saveCategory(categoryDto);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionCategoryResponseDto> updateCategory(@PathVariable(name = "id") Integer categoryId, @RequestBody @Valid TransactionCategoryRequestDto categoryDto) throws NotFoundException {
+        TransactionCategoryResponseDto responseDto = categoryService.updateCategory(categoryId, categoryDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id") Integer categoryId) throws NotFoundException {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.noContent().build();
     }
 
 }

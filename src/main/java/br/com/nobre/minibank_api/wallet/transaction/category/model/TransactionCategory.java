@@ -8,6 +8,7 @@ public class TransactionCategory {
 
     private Integer id;
     private String name;
+    private boolean isActive;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +27,14 @@ public class TransactionCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "is_active")
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }
